@@ -27,13 +27,6 @@ def normalize_files_names(element, path):
 	new_file_name = path.joinpath(normalize_text(element.stem) + element.suffix)
 	os.rename(element, new_file_name)
 
-# #Функция перебора файлов
-# def normalize_files_names(path):
-# 	for element in path.rglob('*.*'):
-# 		new_file_name = path.joinpath(normalize_text(element.stem) + element.suffix)
-# 		os.rename(element, new_file_name)
-		
-
 #Функция возвращает путь к папке с файлами
 def return_path():
 	path = pathlib.Path(input('Insert path: '))
@@ -55,13 +48,12 @@ def arrays_filling(path):
 			files_extension.add(element.suffix)
 			files_path.append(element)
 			files_name.append(element.name)
-			for key, val in files.items():
+			for val in files.values():
 				if element.suffix in val:
 					is_files.add(element.suffix)
 			if element.suffix not in is_files:
 				not_files.add(element.suffix)
 	return [files_extension, files_path, files_name, is_files, not_files]
-
 
 #Функция создания папок по категориям
 def making_dir(path, files_extension):
@@ -127,6 +119,8 @@ def main():
 	files = []
 	for element in path.rglob('*.*'):
 		files.append(Thread(target=normalize_files_names, args=(element, path)))
+		files[-1].start()
+
 	arrays_filling(path)
 	files_extension = arrays_filling(path)[0]
 	is_files = arrays_filling(path)[3]
