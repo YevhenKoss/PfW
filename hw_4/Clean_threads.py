@@ -23,10 +23,15 @@ def normalize_text(text):
 
 
 #Функция нормализации имен файлов
-def normalize_files_names(path):
-	for element in path.rglob('*.*'):
-		new_file_name = path.joinpath(normalize_text(element.stem) + element.suffix)
-		os.rename(element, new_file_name)
+def normalize_files_names(element, path):
+	new_file_name = path.joinpath(normalize_text(element.stem) + element.suffix)
+	os.rename(element, new_file_name)
+
+# #Функция перебора файлов
+# def normalize_files_names(path):
+# 	for element in path.rglob('*.*'):
+# 		new_file_name = path.joinpath(normalize_text(element.stem) + element.suffix)
+# 		os.rename(element, new_file_name)
 		
 
 #Функция возвращает путь к папке с файлами
@@ -119,7 +124,9 @@ def replace_known_files(element, new_file_path):
 def main():
 	path = return_path()
 	started = time.time()
-	normalize_files_names(path)
+	files = []
+	for element in path.rglob('*.*'):
+		files.append(Thread(target=normalize_files_names, args=(element, path)))
 	arrays_filling(path)
 	files_extension = arrays_filling(path)[0]
 	is_files = arrays_filling(path)[3]
